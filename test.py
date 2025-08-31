@@ -1,1 +1,1 @@
-print("hello World!") --global 
+print("hello World!") 
