@@ -1,0 +1,83 @@
+import java.io.*;
+import java.util.*;
+
+public class main {
+    public static void register() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("ID: ");
+        String id = sc.nextLine();
+        System.out.print("Name: ");
+        String name = sc.nextLine();
+        System.out.print("Password: ");
+        String password = sc.nextLine();
+
+        String userData = id + "|" + name + "|" + password;
+        try {
+            FileWriter fw = new FileWriter("studentList.txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(userData);
+            bw.newLine();
+            bw.close();
+            System.out.println("User has been registered successfully");
+        } catch (IOException e) {
+            System.out.println("Error occured while writing to file" + e.getMessage());
+        }
+        sc.close();
+    }
+
+    public static void login() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("ID: ");
+        String enteredId = sc.nextLine();
+        System.out.print("Password: ");
+        String enteredPassword = sc.nextLine();
+        boolean loginSuccess = false;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("studentList.txt"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                String id = parts[0];
+                String name = parts[1];
+                String password = parts[2];
+
+                if (enteredId.equals(id) && enteredPassword.equals(password)) {
+                    System.out.print("Login Successful. Welcome, " + name);
+                    loginSuccess = true;
+                    break;
+                }
+            }
+            if (!loginSuccess) {
+                System.out.print("Login Unsuccessful. ID or Password incorrect");
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("Error occured while reading to file" + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        boolean choice2 = true;
+        while (choice2) {
+            System.out.println("Do you want to:\n1. Register\n2. Login ");
+            int choice = sc.nextInt();
+            switch (choice) {
+                case 1:
+                    register();
+                    choice2 = false;
+                    break;
+                case 2:
+                    login();
+                    choice2 = false;
+                    break;
+                default:
+                    System.out.println("Invalid input received, Do you want to ry again? (true/false)");
+                    sc.nextLine();
+                    choice2 = sc.nextBoolean();
+            }
+        }
+        sc.close();
+    }
+}
