@@ -55,6 +55,7 @@ public class main {
         } catch (IOException e) {
             System.out.println("Error occured while reading to file" + e.getMessage());
         }
+        sc.close();
     }
 
     public static void main(String[] args) {
