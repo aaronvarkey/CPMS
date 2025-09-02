@@ -44,7 +44,7 @@ public class main {
                 String name = parts[1];
                 String password = parts[2];
                 String role = parts[3];
-
+                user u = new user(id, name, password, role);
                 String roleFormatted = "";
                 switch (role) {
                     case "stud":
@@ -58,7 +58,7 @@ public class main {
                         break;
                 }
 
-                if (enteredId.equals(id) && enteredPassword.equals(password)) {
+                if (enteredId.equals(u.getId()) && u.checkPassword(enteredPassword)) {
                     System.out.println("=====Login Successful=====");
                     System.out.println("--------------------------");
                     System.out.println("User: " + name);
