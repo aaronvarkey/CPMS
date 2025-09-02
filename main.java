@@ -10,10 +10,12 @@ public class main {
         String name = sc.nextLine();
         System.out.print("Password: ");
         String password = sc.nextLine();
+        System.out.print("User Type (stud/vend/adm): ");
+        String role = sc.nextLine();
 
-        String userData = id + "|" + name + "|" + password;
+        String userData = id + "|" + name + "|" + password + "|" + role;
         try {
-            FileWriter fw = new FileWriter("studentList.txt", true);
+            FileWriter fw = new FileWriter("userList.txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(userData);
             bw.newLine();
@@ -34,16 +36,35 @@ public class main {
         boolean loginSuccess = false;
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader("studentList.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("userList.txt"));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 String id = parts[0];
                 String name = parts[1];
                 String password = parts[2];
+                String role = parts[3];
+
+                String roleFormatted = "";
+                switch (role) {
+                    case "stud":
+                        roleFormatted = "Student";
+                        break;
+                    case "vend":
+                        roleFormatted = "Vendor";
+                        break;
+                    case "adm":
+                        roleFormatted = "Admin";
+                        break;
+                }
 
                 if (enteredId.equals(id) && enteredPassword.equals(password)) {
-                    System.out.print("Login Successful. Welcome, " + name);
+                    System.out.println("=====Login Successful=====");
+                    System.out.println("--------------------------");
+                    System.out.println("User: " + name);
+                    System.out.println("ID: " + id);
+                    System.out.println("Role: " + roleFormatted);
+                    System.out.println("--------------------------");
                     loginSuccess = true;
                     break;
                 }
