@@ -2,8 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class main {
-    public static void register() {
-        Scanner sc = new Scanner(System.in);
+    public static void register(Scanner sc) {
         System.out.print("ID: ");
         String id = sc.nextLine();
         System.out.print("Name: ");
@@ -24,17 +23,15 @@ public class main {
         } catch (IOException e) {
             System.out.println("Error occured while writing to file" + e.getMessage());
         }
-        sc.close();
     }
 
-    public static void login() {
-        Scanner sc = new Scanner(System.in);
+    public static user login(Scanner sc) {
         System.out.print("ID: ");
         String enteredId = sc.nextLine();
         System.out.print("Password: ");
         String enteredPassword = sc.nextLine();
         boolean loginSuccess = false;
-
+        user u = null;
         try {
             BufferedReader br = new BufferedReader(new FileReader("userList.txt"));
             String line;
@@ -44,7 +41,7 @@ public class main {
                 String name = parts[1];
                 String password = parts[2];
                 String role = parts[3];
-                user u = new user(id, name, password, role);
+
                 String roleFormatted = "";
                 switch (role) {
                     case "stud":
@@ -57,6 +54,7 @@ public class main {
                         roleFormatted = "Admin";
                         break;
                 }
+                u = new user(id, name, password, role);
 
                 if (enteredId.equals(u.getId()) && u.checkPassword(enteredPassword)) {
                     System.out.println("=====Login Successful=====");
@@ -67,6 +65,8 @@ public class main {
                     System.out.println("--------------------------");
                     loginSuccess = true;
                     break;
+                } else {
+                    u = null;
                 }
             }
             if (!loginSuccess) {
@@ -76,7 +76,7 @@ public class main {
         } catch (IOException e) {
             System.out.println("Error occured while reading to file" + e.getMessage());
         }
-        sc.close();
+        return u;
     }
 
     public static void main(String[] args) {
@@ -85,18 +85,21 @@ public class main {
         while (choice2) {
             System.out.println("Do you want to:\n1. Register\n2. Login ");
             int choice = sc.nextInt();
+            sc.nextLine();
             switch (choice) {
                 case 1:
-                    register();
+                    register(sc);
                     choice2 = false;
                     break;
                 case 2:
-                    login();
+                    user u = login(sc);
+                    if (u != null) {
+                        System.out.println("Welcome, " + u.getName() + "! Role = " + u.getRole());
+                    }
                     choice2 = false;
                     break;
                 default:
                     System.out.println("Invalid input received, Do you want to ry again? (true/false)");
-                    sc.nextLine();
                     choice2 = sc.nextBoolean();
             }
         }
