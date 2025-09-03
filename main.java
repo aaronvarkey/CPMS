@@ -59,11 +59,11 @@ public class main {
                         break;
                     case "vend":
                         roleFormatted = "Vendor";
-                        // u = new vendor(id, name, password); //Feature to be implemented.
+                        u = new vendor(id, name, password);
                         break;
                     case "adm":
                         roleFormatted = "Admin";
-                        // u = new admin(id, name, password); //Feature to be implemented.
+                        u = new admin(id, name, password);
                         break;
                 }
 
@@ -118,7 +118,31 @@ public class main {
     }
 
     public static void adminMenu(admin a, Scanner sc) {
-        System.out.println("Admin menu coming soon.....");
+        boolean adminChoice = true;
+        while (adminChoice) {
+            System.out.println("\n=====Admin Menu=====");
+            System.out.println("\n1. Set balance of Student/s\n2. Exit");
+            System.out.println("Choose an option: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Student ID to set balance for: ");
+                    String setId = sc.nextLine();
+                    System.out.println("Input balance amount to set: ");
+                    double amount = sc.nextDouble();
+                    sc.nextLine();
+                    a.setStudentBalance(setId, amount);
+                    break;
+                case 2:
+                    adminChoice = false;
+                    System.out.println("Exited.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try Again.");
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -141,9 +165,9 @@ public class main {
                         if (u.getRole().equals("stud")) {
                             studentMenu((student) u, sc);
                         } else if (u.getRole().equals("vend")) {
-                            // vendorMenu((vendor) u, sc); //Feature to be implemented.
-                        } else if (u.getRole().equals("vend")) {
-                            // adminMenu((admin) u, sc); //Feature to be implemented.
+                            vendorMenu((vendor) u, sc);
+                        } else if (u.getRole().equals("adm")) {
+                            adminMenu((admin) u, sc);
                         }
                     }
                     choice2 = false;
