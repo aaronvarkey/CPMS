@@ -68,9 +68,8 @@ public class main {
                 }
 
                 if (enteredId.equals(u.getId()) && u.checkPassword(enteredPassword)) {
-                    System.out.println("=====Login Successful=====");
-                    System.out.println("--------------------------");
-                    System.out.println("User: " + name);
+                    System.out.println("\n=====Login Successful=====");
+                    System.out.println("\nUser: " + name);
                     System.out.println("ID: " + id);
                     System.out.println("Role: " + roleFormatted);
                     System.out.println("--------------------------");
@@ -121,7 +120,7 @@ public class main {
         boolean adminChoice = true;
         while (adminChoice) {
             System.out.println("\n=====Admin Menu=====");
-            System.out.println("\n1. Set balance of Student/s\n2. Exit");
+            System.out.println("\n1. Set balance of Student/s\n2. View Student List\n3. Exit");
             System.out.println("Choose an option: ");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -136,6 +135,9 @@ public class main {
                     a.setStudentBalance(setId, amount);
                     break;
                 case 2:
+                    a.viewStudentList();
+                    break;
+                case 3:
                     adminChoice = false;
                     System.out.println("Exited.");
                     break;
@@ -161,7 +163,22 @@ public class main {
                 case 2:
                     user u = login(sc);
                     if (u != null) {
-                        System.out.println("Welcome, " + u.getName() + "! Role = " + u.getRole());
+                        String roleFormatted = u.getRole();
+                        switch (roleFormatted) {
+                            case "stud":
+                                roleFormatted = "Student";
+                                break;
+                            case "vend":
+                                roleFormatted = "Vendor";
+                                break;
+                            case "adm":
+                                roleFormatted = "Admin";
+                                break;
+                            default:
+                                roleFormatted = "Invalid";
+                                break;
+                        }
+                        System.out.println("Welcome " + roleFormatted + ",\n" + u.getName());
                         if (u.getRole().equals("stud")) {
                             studentMenu((student) u, sc);
                         } else if (u.getRole().equals("vend")) {

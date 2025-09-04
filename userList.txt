@@ -1,2 +1,4 @@
 123|aaron|1234|stud
+369|M|369|stud
+4553|dummyVendor|4553|vend
 2255|A10|2255|adm
