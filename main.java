@@ -2,8 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class main {
-    public static void register() {
-        Scanner sc = new Scanner(System.in);
+    public static void register(Scanner sc) {
         System.out.print("ID: ");
         String id = sc.nextLine();
         System.out.print("Name: ");
@@ -20,21 +19,27 @@ public class main {
             bw.write(userData);
             bw.newLine();
             bw.close();
+
+            if (role.equals("stud")) {
+                BufferedWriter bf = new BufferedWriter(new FileWriter("hostellerAccounts.txt", true));
+                bf.write(id + "|" + "0.0");
+                bf.newLine();
+                bf.close();
+            }
+
             System.out.println("User has been registered successfully");
         } catch (IOException e) {
             System.out.println("Error occured while writing to file" + e.getMessage());
         }
-        sc.close();
     }
 
-    public static void login() {
-        Scanner sc = new Scanner(System.in);
+    public static user login(Scanner sc) {
         System.out.print("ID: ");
         String enteredId = sc.nextLine();
         System.out.print("Password: ");
         String enteredPassword = sc.nextLine();
         boolean loginSuccess = false;
-
+        user u = null;
         try {
             BufferedReader br = new BufferedReader(new FileReader("userList.txt"));
             String line;
@@ -44,29 +49,34 @@ public class main {
                 String name = parts[1];
                 String password = parts[2];
                 String role = parts[3];
-                user u = new user(id, name, password, role);
+
                 String roleFormatted = "";
                 switch (role) {
                     case "stud":
                         roleFormatted = "Student";
+                        double balance = student.loadBalance(id);
+                        u = new student(id, name, password, balance);
                         break;
                     case "vend":
                         roleFormatted = "Vendor";
+                        u = new vendor(id, name, password);
                         break;
                     case "adm":
                         roleFormatted = "Admin";
+                        u = new admin(id, name, password);
                         break;
                 }
 
                 if (enteredId.equals(u.getId()) && u.checkPassword(enteredPassword)) {
-                    System.out.println("=====Login Successful=====");
-                    System.out.println("--------------------------");
-                    System.out.println("User: " + name);
+                    System.out.println("\n=====Login Successful=====");
+                    System.out.println("\nUser: " + name);
                     System.out.println("ID: " + id);
                     System.out.println("Role: " + roleFormatted);
                     System.out.println("--------------------------");
                     loginSuccess = true;
                     break;
+                } else {
+                    u = null;
                 }
             }
             if (!loginSuccess) {
@@ -76,7 +86,65 @@ public class main {
         } catch (IOException e) {
             System.out.println("Error occured while reading to file" + e.getMessage());
         }
-        sc.close();
+        return u;
+    }
+
+    public static void studentMenu(student s, Scanner sc) {
+        boolean studentChoice = true;
+        while (studentChoice) {
+            System.out.println("\n=====Student Menu=====");
+            System.out.println("\n1. View Balance\n2. Exit");
+            System.out.println("Choose an option: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Current Balance: " + s.getBalance());
+                    break;
+                case 2:
+                    studentChoice = false;
+                    System.out.println("Exited.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try Again.");
+            }
+        }
+    }
+
+    public static void vendorMenu(vendor v, Scanner sc) {
+        System.out.println("Vendor menu coming soon.....");
+    }
+
+    public static void adminMenu(admin a, Scanner sc) {
+        boolean adminChoice = true;
+        while (adminChoice) {
+            System.out.println("\n=====Admin Menu=====");
+            System.out.println("\n1. Set balance of Student/s\n2. View Student List\n3. Exit");
+            System.out.println("Choose an option: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Student ID to set balance for: ");
+                    String setId = sc.nextLine();
+                    System.out.println("Input balance amount to set: ");
+                    double amount = sc.nextDouble();
+                    sc.nextLine();
+                    a.setStudentBalance(setId, amount);
+                    break;
+                case 2:
+                    a.viewStudentList();
+                    break;
+                case 3:
+                    adminChoice = false;
+                    System.out.println("Exited.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try Again.");
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -84,19 +152,45 @@ public class main {
         boolean choice2 = true;
         while (choice2) {
             System.out.println("Do you want to:\n1. Register\n2. Login ");
+            System.out.println("Choose an option: ");
             int choice = sc.nextInt();
+            sc.nextLine();
             switch (choice) {
                 case 1:
-                    register();
+                    register(sc);
                     choice2 = false;
                     break;
                 case 2:
-                    login();
+                    user u = login(sc);
+                    if (u != null) {
+                        String roleFormatted = u.getRole();
+                        switch (roleFormatted) {
+                            case "stud":
+                                roleFormatted = "Student";
+                                break;
+                            case "vend":
+                                roleFormatted = "Vendor";
+                                break;
+                            case "adm":
+                                roleFormatted = "Admin";
+                                break;
+                            default:
+                                roleFormatted = "Invalid";
+                                break;
+                        }
+                        System.out.println("Welcome " + roleFormatted + ",\n" + u.getName());
+                        if (u.getRole().equals("stud")) {
+                            studentMenu((student) u, sc);
+                        } else if (u.getRole().equals("vend")) {
+                            vendorMenu((vendor) u, sc);
+                        } else if (u.getRole().equals("adm")) {
+                            adminMenu((admin) u, sc);
+                        }
+                    }
                     choice2 = false;
                     break;
                 default:
                     System.out.println("Invalid input received, Do you want to ry again? (true/false)");
-                    sc.nextLine();
                     choice2 = sc.nextBoolean();
             }
         }
