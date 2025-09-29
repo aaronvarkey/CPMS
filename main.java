@@ -92,8 +92,12 @@ public class main {
     public static void studentMenu(student s, Scanner sc) {
         boolean studentChoice = true;
         while (studentChoice) {
-            System.out.println("\n=====Student Menu=====");
-            System.out.println("\n1. View Balance\n2. Exit");
+            System.out.println("\n===== Student Menu =====");
+            System.out.println("1. View Balance");
+            System.out.println("2. Place Order");
+            System.out.println("3. View My Orders");
+            System.out.println("4. Cancel Order");
+            System.out.println("5. Exit");
             System.out.println("Choose an option: ");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -103,6 +107,46 @@ public class main {
                     System.out.println("Current Balance: " + s.getBalance());
                     break;
                 case 2:
+                    System.out.println("Enter pickup date (YYYY-MM-DD): ");
+                    String pickupDate = sc.nextLine();
+                    System.out.println("Enter location (Hostel/Canteen): ");
+                    String location = sc.nextLine();
+                    System.out.println("Enter order cost: ");
+                    double orderCost = sc.nextDouble();
+                    sc.nextLine();
+
+                    try {
+                        if (s.getBalance() >= orderCost) {
+                            canteenOrder order = new canteenOrder(s.getId(), pickupDate, location, orderCost);
+                            order.saveToFile();
+
+                            double newBalance = s.getBalance() - orderCost;
+                            s.updateBalance(s.getId(), newBalance);
+                            s.setBalance(newBalance);
+
+                            System.out.println("Order placed successfully!");
+                            System.out.println("Order ID: " + order.getOrderId());
+                            System.out.println("QR Code: " + order.getQrCode());
+                            System.out.println("Remaining Balance: " + newBalance);
+                        } else {
+                            System.out.println(
+                                    "Insufficient balance! Current: " + s.getBalance() + ", Required: " + orderCost);
+                        }
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Order Failed: " + e.getMessage());
+                    }
+                    break;
+                case 3:
+                    canteenOrder.viewStudentOrders(s.getId());
+                    break;
+                case 4:
+                    System.out.println("Enter Order ID to cancel: ");
+                    String cancelOrderId = sc.nextLine();
+                    canteenOrder.cancelStudentOrder(cancelOrderId, s.getId());
+
+                    s.setBalance(student.loadBalance(s.getId()));
+                    break;
+                case 5:
                     studentChoice = false;
                     System.out.println("Exited.");
                     break;
@@ -113,14 +157,48 @@ public class main {
     }
 
     public static void vendorMenu(vendor v, Scanner sc) {
-        System.out.println("Vendor menu coming soon.....");
+        boolean vendorChoice = true;
+        while (vendorChoice) {
+            System.out.println("\n===== Vendor Menu =====");
+            System.out.println("1. View All Orders");
+            System.out.println("2. View Pending Orders");
+            System.out.println("3. Mark Order as Completed");
+            System.out.println("4. Exit");
+            System.out.println("Choose an option: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    canteenOrder.viewAllOrders();
+                    break;
+                case 2:
+                    canteenOrder.viewOrderByStatus("ORDERED");
+                    break;
+                case 3:
+                    System.out.println("Enter OrderId to be marked as completed: ");
+                    String completeOrderId = sc.nextLine();
+                    canteenOrder.updateOrderStatus(completeOrderId, "COMPLETED");
+                    break;
+                case 4:
+                    vendorChoice = false;
+                    System.out.println("Exited.");
+                    break;
+                default:
+                    System.out.println("Invalid Choice. Try Again.");
+            }
+        }
     }
 
     public static void adminMenu(admin a, Scanner sc) {
         boolean adminChoice = true;
         while (adminChoice) {
-            System.out.println("\n=====Admin Menu=====");
-            System.out.println("\n1. Set balance of Student/s\n2. View Student List\n3. Exit");
+            System.out.println("\n===== Admin Menu =====");
+            System.out.println("1. Set Student Balance");
+            System.out.println("2. View Student List");
+            System.out.println("3. View All Orders");
+            System.out.println("4. View Order by Status");
+            System.out.println("5. Exit");
             System.out.println("Choose an option: ");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -138,6 +216,14 @@ public class main {
                     a.viewStudentList();
                     break;
                 case 3:
+                    canteenOrder.viewAllOrders();
+                    break;
+                case 4:
+                    System.out.print("Enter status to filter (ORDERED/DELIVERED): ");
+                    String filterStatus = sc.nextLine();
+                    canteenOrder.viewOrderByStatus(filterStatus);
+                    break;
+                case 5:
                     adminChoice = false;
                     System.out.println("Exited.");
                     break;
