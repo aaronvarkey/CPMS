@@ -1,0 +1,4 @@
+123|aaron|1234|stud|Boys Hostel
+369|M|369|stud|Girls Hostel
+4553|dummyVendor|4553|vend|Boys Hostel
+2255|A10|2255|adm
