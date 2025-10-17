@@ -1,7 +1,6 @@
 package backend;
 
 import java.io.*;
-import java.util.*;
 
 public class vendor extends user {
     private String SLocation;

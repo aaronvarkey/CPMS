@@ -1,6 +1,5 @@
 package backend;
 
-import java.util.*;
 import java.io.*;
 
 public class student extends user {
