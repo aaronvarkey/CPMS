@@ -1,12 +1,19 @@
-import java.util.*;
+package backend;
+
 import java.io.*;
 
 public class student extends user {
     private double balance;
+    private String hostel;
 
-    public student(String id, String name, String password, double balance) {
+    public student(String id, String name, String password, double balance, String hostel) {
         super(id, name, password, "stud");
         this.balance = balance;
+        this.hostel = hostel;
+    }
+
+    public String getHostel() {
+        return hostel;
     }
 
     public double getBalance() {
@@ -18,7 +25,7 @@ public class student extends user {
     }
 
     public static double loadBalance(String studentId) {
-        try (BufferedReader br = new BufferedReader(new FileReader("hostellerAccounts.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("database/hostellerAccounts.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
@@ -33,8 +40,8 @@ public class student extends user {
     }
 
     public void updateBalance(String studentId, double newBalance) {
-        File inputFile = new File("hostellerAccounts.txt");
-        File tempFile = new File("tempBalance.txt");
+        File inputFile = new File("database/hostellerAccounts.txt");
+        File tempFile = new File("database/tempBalance.txt");
 
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile));
                 BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
