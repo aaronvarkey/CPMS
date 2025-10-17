@@ -1,10 +1,12 @@
+package backend;
+
 public class user {
     private String name;
     private String id;
     private String password;
     private String role;
 
-    user(String id, String name, String password, String role) {
+    public user(String id, String name, String password, String role) {
         this.name = name;
         this.id = id;
         this.password = password;
