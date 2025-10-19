@@ -175,7 +175,6 @@ public class main {
                     System.out.print("Enter pickup date (YYYY-MM-DD): ");
                     String pickupDate = sc.nextLine();
 
-                    // Option-based location selection
                     System.out.println("Select location:");
                     System.out.println("1. My Hostel (" + s.getHostel() + ")");
                     System.out.println("2. Canteen");
