@@ -361,7 +361,7 @@ public class main {
             System.out.println("3. View All Orders");
             System.out.println("4. View Orders by Status");
             System.out.println("5. View Orders by Location");
-            System.out.println("6. View Hostel Summary");
+            System.out.println("6. View Location Summary");
             System.out.println("7. Exit");
             System.out.print("Choose an option: ");
             int choice = sc.nextInt();
