@@ -84,10 +84,10 @@ public class datePicker extends JDialog {
         okButton.setFocusPainted(false);
         okButton.addActionListener(e -> {
             int year = (Integer) yearBox.getSelectedItem();
-            String monthStr = ((String) monthBox.getSelectedItem()).substring(0, 2);
+            int month = monthBox.getSelectedIndex() + 1;
             int day = (Integer) dayBox.getSelectedItem();
 
-            selectedDate = String.format("%d-%s-%02d", year, monthStr, day);
+            selectedDate = String.format("%d-%02d-%02d", year, month, day);
             dispose();
         });
         mainPanel.add(okButton);

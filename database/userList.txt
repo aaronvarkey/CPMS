@@ -2,4 +2,4 @@
 369|M|369|stud|Girls Hostel
 4553|dummyVendor|4553|vend|Boys Hostel
 2255|A10|2255|adm
-
+567|Y|567|vend|Canteen

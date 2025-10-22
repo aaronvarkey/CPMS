@@ -118,7 +118,7 @@ public class setStudentBalanceScreen extends JFrame {
         studentDetailsArea.setText("");
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader("database/users.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("database/userList.txt"));
             String line;
 
             while ((line = br.readLine()) != null) {
